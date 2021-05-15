@@ -1,6 +1,10 @@
 # Next.js Notion blog
 
-Starter template for creating blog with Notion as CMS. Uses [Notion API](https://github.com/makenotion/notion-sdk-js).
+Starter template for creating blog with Notion as CMS. Uses [Notion API](https://github.com/makenotion/notion-sdk-js). 
+
+## Demo
+
+https://www.loom.com/share/f8c68ab7e0c6462dadc3f9fc92252c64
 
 ## How to create blog?
 
