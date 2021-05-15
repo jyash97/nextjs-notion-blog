@@ -1,1 +1,21 @@
-This is a starter template for [Learn Next.js](https://nextjs.org/learn).
+# Next.js Notion blog
+
+Starter template for creating blog with Notion as CMS. Uses [Notion API](https://github.com/makenotion/notion-sdk-js).
+
+## How to create blog?
+
+1. Fork the repo. 
+2. Create Notion auth token [here](https://www.notion.so/my-integrations).
+3. Create a new database in Notion [ new page with a database ]. Learn more [here](https://developers.notion.com/docs).
+4. Set environment variables:
+    ```md
+    NOTION_AUTH_KEY=your_key
+    NOTION_DATABASE_ID=your_db_id
+
+    ```
+
+
+## Note
+
+The API is still in beta and doesn't support many components like `quote`, `code` , `divider`, etc. 
+
