@@ -1,8 +1,9 @@
 import { Box, Text } from "@chakra-ui/react";
 import Head from "next/head";
 import BlogCard from "../components/BlogCard";
+import { getDatabaseEntries } from "../utils/notion";
 
-export default function Home({ results }) {
+export default function Home({ blogs }) {
   return (
     <>
       <Head>
@@ -22,8 +23,8 @@ export default function Home({ results }) {
           </Text>
         </Box>
         <Box maxW="container.md" mx="auto">
-          {results.map((result) => (
-            <BlogCard blog={result} key={result.id} />
+          {blogs.map((blog) => (
+            <BlogCard blog={blog} key={blog.id} />
           ))}
         </Box>
       </main>
@@ -31,19 +32,13 @@ export default function Home({ results }) {
   );
 }
 
-export async function getServerSideProps() {
-  const { Client } = await import("@notionhq/client");
-  const notion = new Client({
-    auth: process.env.NOTION_AUTH_KEY,
-  });
-
-  const { results } = await notion.databases.query({
-    database_id: process.env.NOTION_DATABASE_ID,
-  });
+export async function getStaticProps() {
+  const entries = await getDatabaseEntries();
 
   return {
     props: {
-      results: results || [],
+      blogs: entries,
     },
+    revalidate: 15,
   };
 }

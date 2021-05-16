@@ -1,11 +1,14 @@
 import { Box, Text } from "@chakra-ui/react";
 import React from "react";
 import Head from "next/head";
+
 import Link from "next/link";
 
 import NotionRenderer from "../../components/NotionRenderer";
+import { getDatabaseEntries, getPage } from "../../utils/notion";
 
 const Post = ({ meta, content }) => {
+
   if (meta?.status === 404) {
     return (
       <Box maxW="container.md" mx="auto">
@@ -17,7 +20,9 @@ const Post = ({ meta, content }) => {
   }
 
   const nameType = meta.properties.Name.type;
-  const pageTitle = meta.properties.Name[nameType].map(block => block.plain_text).join(" ");
+  const pageTitle = meta.properties.Name[nameType]
+    .map((block) => block.plain_text)
+    .join(" ");
 
   return (
     <>
@@ -47,37 +52,40 @@ const Post = ({ meta, content }) => {
 
 export default Post;
 
-export async function getServerSideProps(context) {
-  const { params } = context;
-  if (params.pid) {
-    const { Client } = await import("@notionhq/client");
-    const notion = new Client({
-      auth: process.env.NOTION_AUTH_KEY,
-    });
+export async function getStaticPaths() {
+  const entries = await getDatabaseEntries();
 
-    // Fetch page meta info
-    const page = await notion.pages.retrieve({
-      page_id: params.pid,
-    });
-
-    // Fetch page content
-    const { results: content } = await notion.blocks.children.list({
-      block_id: params.pid,
-      page_size: 100,
-    });
-
-    return {
-      props: {
-        meta: page,
-        content,
+  return {
+    paths: entries.map((entry) => ({
+      params: {
+        pid: entry.id,
       },
+    })),
+    fallback: false,
+  };
+}
+
+export async function getStaticProps(context) {
+  const { params } = context;
+
+  try {
+    if (params.pid) {
+      const pageInfo = await getPage(params.pid);
+
+      return {
+        props: {
+          ...pageInfo,
+        },
+        revalidate: 1,
+      };
+    }
+  } catch (e) {
+    return {
+      notFound: true,
     };
   }
+
   return {
-    props: {
-      meta: {
-        status: 404,
-      },
-    },
+    notFound: true,
   };
 }

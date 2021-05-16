@@ -17,7 +17,7 @@ const getStyleProps = (type) => {
         color: "gray.700",
         fontSize: "3xl",
         fontWeight: "extrabold",
-        mb: 4
+        mb: 4,
       };
     }
     case "heading_2": {
@@ -25,7 +25,7 @@ const getStyleProps = (type) => {
         color: "gray.700",
         fontSize: "2xl",
         fontWeight: "bold",
-        mb: 3
+        mb: 3,
       };
     }
     case "heading_3": {
@@ -38,7 +38,7 @@ const getStyleProps = (type) => {
     case "paragraph": {
       return {
         color: "gray.600",
-        mb: 3
+        mb: 3,
       };
     }
     case "title": {
@@ -68,12 +68,28 @@ const Annotations = ({ text, annotations }) => {
   };
 
   if (annotations.code) {
-    return <pre style={styles}>{text.content}</pre>;
+    return (
+      <span
+        style={{
+          ...styles,
+          fontFamily: "SFMono-Regular,Menlo,Monaco,Consolas,monospace",
+        }}
+      >
+        {text.content}
+      </span>
+    );
   }
 
   if (text.link) {
     return (
-      <Box as="a" textDecoration="underline" color="blue.400" target="_blank" style={styles} href={text.link.url}>
+      <Box
+        as="a"
+        textDecoration="underline"
+        color="blue.400"
+        target="_blank"
+        style={styles}
+        href={text.link.url}
+      >
         {text.content}
       </Box>
     );
@@ -126,6 +142,5 @@ const NotionRenderer = ({ content, wrapperProps = {} }) => {
       return type;
   }
 };
-
 
 export default NotionRenderer;
