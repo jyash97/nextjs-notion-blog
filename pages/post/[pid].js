@@ -1,20 +1,19 @@
 import { Box, Text } from "@chakra-ui/react";
 import React from "react";
 import Head from "next/head";
-
+import { useRouter } from "next/router";
 import Link from "next/link";
 
 import NotionRenderer from "../../components/NotionRenderer";
 import { getDatabaseEntries, getPage } from "../../utils/notion";
 
 const Post = ({ meta, content }) => {
+  const router = useRouter();
 
-  if (meta?.status === 404) {
+  if (router.isFallback) {
     return (
-      <Box maxW="container.md" mx="auto">
-        <Text fontSize="3xl" fontWeight="bold" color="red.500">
-          Post Not available
-        </Text>
+      <Box p={10} textAlign="center">
+        Fetching Post...
       </Box>
     );
   }
@@ -61,7 +60,7 @@ export async function getStaticPaths() {
         pid: entry.id,
       },
     })),
-    fallback: false,
+    fallback: true,
   };
 }
 
